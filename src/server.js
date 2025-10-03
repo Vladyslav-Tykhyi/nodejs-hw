@@ -6,7 +6,7 @@ import { notFoundHandler } from './middleware/notFoundHandler.js';
 import helmet from 'helmet';
 import { logger } from './middleware/logger.js';
 import { errorHandler } from './middleware/errorHandler.js';
-import router from './routes/noutesRoutes.js';
+import router from './routes/routesRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT ?? 3030;
