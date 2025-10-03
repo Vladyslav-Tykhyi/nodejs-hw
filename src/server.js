@@ -16,12 +16,16 @@ app.use(express.json({ limit: 100 }));
 app.use(cors());
 app.use(helmet());
 
+//all routes
 app.use('/notes', router);
 
+//notFoundHandler
 app.use(notFoundHandler);
 
+//general errorHandler
 app.use(errorHandler);
 
+//server connection
 await connectMongoDB();
 
 app.listen(PORT, () => {
