@@ -2,8 +2,8 @@ import Note from '../models/note.js';
 import createHttpError from 'http-errors';
 
 export async function getAllNotes(req, res) {
-  const note = await Note.find();
-  res.status(200).json(note);
+  const notes = await Note.find();
+  res.status(200).json(notes);
 }
 
 export async function getNoteById(req, res, next) {
@@ -32,7 +32,7 @@ export const deleteNote = async (req, res, next) => {
     return;
   }
 
-  res.status(200).send(note);
+  res.status(200).json(note);
 };
 
 export const updateNote = async (req, res, next) => {
