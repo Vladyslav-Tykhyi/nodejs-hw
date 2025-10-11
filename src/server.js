@@ -6,7 +6,9 @@ import { notFoundHandler } from './middleware/notFoundHandler.js';
 import helmet from 'helmet';
 import { logger } from './middleware/logger.js';
 import { errorHandler } from './middleware/errorHandler.js';
+
 import router from './routes/notesRoutes.js';
+import { errors } from 'celebrate';
 
 const app = express();
 const PORT = process.env.PORT ?? 3030;
@@ -19,6 +21,8 @@ app.use(helmet());
 app.use('/notes', router);
 
 app.use(notFoundHandler);
+
+app.use(errors());
 
 app.use(errorHandler);
 
