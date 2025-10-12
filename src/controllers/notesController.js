@@ -1,41 +1,51 @@
 import Note from '../models/note.js';
 import createHttpError from 'http-errors';
 
-export const getAllNotes = async (req, res) => {
-  const { tag, search, page = 1, perPage = 10 } = req.query;
+export const getAllNotes = async (req, res, next) => {
+  try {
+    const { tag, search, page = 1, perPage = 10 } = req.query;
 
-  const filter = {};
+    const currentPage = parseInt(page, 10);
+    const itemsPerPage = parseInt(perPage, 10);
+    const skip = (currentPage - 1) * itemsPerPage;
 
-  if (tag) {
-    filter.tag = { $regex: `^${tag}$`, $options: 'i' };
+    let query = Note.find();
+
+    if (tag) {
+      query = query.where('tag').equals(tag);
+    }
+
+    if (search) {
+      query = query.find({ $text: { $search: search } });
+    }
+
+    query = query.skip(skip).limit(itemsPerPage);
+
+    const [notes, totalNotes] = await Promise.all([
+      query.exec(),
+      Note.countDocuments(
+        tag && search
+          ? { tag, $text: { $search: search } }
+          : tag
+          ? { tag }
+          : search
+          ? { $text: { $search: search } }
+          : {},
+      ),
+    ]);
+
+    const totalPages = Math.ceil(totalNotes / itemsPerPage);
+
+    res.status(200).json({
+      page: currentPage,
+      perPage: itemsPerPage,
+      totalNotes,
+      totalPages,
+      notes,
+    });
+  } catch (error) {
+    next(createHttpError(500, error.message));
   }
-
-  if (search) {
-    filter.$or = [
-      { title: { $regex: search, $options: 'i' } },
-      { content: { $regex: search, $options: 'i' } },
-    ];
-  }
-
-  const currentPage = parseInt(page);
-  const itemsPerPage = parseInt(perPage);
-
-  const skip = (currentPage - 1) * itemsPerPage;
-
-  const [notes, totalNotes] = await Promise.all([
-    Note.find(filter).skip(skip).limit(itemsPerPage),
-    Note.countDocuments(filter),
-  ]);
-
-  const totalPages = Math.ceil(totalNotes / itemsPerPage);
-
-  res.status(200).json({
-    page: currentPage,
-    perPage: itemsPerPage,
-    totalNotes,
-    totalPages,
-    notes,
-  });
 };
 
 export async function getNoteById(req, res, next) {
