@@ -14,11 +14,11 @@ const app = express();
 const PORT = process.env.PORT ?? 3030;
 
 app.use(logger);
-app.use(express.json({ limit: 100 }));
+app.use(express.json());
 app.use(cors());
 app.use(helmet());
 
-app.use('/notes', router);
+app.use(router);
 
 app.use(notFoundHandler);
 
