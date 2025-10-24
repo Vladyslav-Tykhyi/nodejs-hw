@@ -6,12 +6,13 @@ import { notFoundHandler } from './middleware/notFoundHandler.js';
 import helmet from 'helmet';
 import { logger } from './middleware/logger.js';
 import { errorHandler } from './middleware/errorHandler.js';
-import routerUser from './routes/authRoutes.js';
+import routerAuth from './routes/authRoutes.js';
 
 import router from './routes/notesRoutes.js';
 import { errors } from 'celebrate';
 
 import cookieParser from 'cookie-parser';
+import routerUser from './routes/userRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT ?? 3030;
@@ -22,8 +23,9 @@ app.use(cors());
 app.use(cookieParser());
 app.use(helmet());
 
-app.use(routerUser);
+app.use(routerAuth);
 app.use(router);
+app.use(routerUser);
 
 app.use(notFoundHandler);
 
