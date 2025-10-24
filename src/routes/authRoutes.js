@@ -7,17 +7,31 @@ import {
   logoutUser,
   refreshUserSession,
   registerUser,
+  requestResetEmail,
+  resetPassword,
 } from '../controllers/authController.js';
 import {
   loginUserSchema,
   registerUserSchema,
+  requestResetEmailSchema,
+  resetPasswordSchema,
 } from '../validations/authValidation.js';
 
-const routerUser = Router();
+const routerAuth = Router();
 
-routerUser.post('/auth/register', celebrate(registerUserSchema), registerUser);
-routerUser.post('/auth/login', celebrate(loginUserSchema), loginUser);
-routerUser.post('/auth/logout', logoutUser);
-routerUser.post('/auth/refresh', refreshUserSession);
+routerAuth.post('/auth/register', celebrate(registerUserSchema), registerUser);
+routerAuth.post('/auth/login', celebrate(loginUserSchema), loginUser);
+routerAuth.post('/auth/logout', logoutUser);
+routerAuth.post('/auth/refresh', refreshUserSession);
+routerAuth.post(
+  '/auth/request-reset-email',
+  celebrate(requestResetEmailSchema),
+  requestResetEmail,
+);
+routerAuth.post(
+  '/auth/reset-password',
+  celebrate(resetPasswordSchema),
+  resetPassword,
+);
 
-export default routerUser;
+export default routerAuth;
