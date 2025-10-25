@@ -23,7 +23,7 @@ app.use(cors());
 app.use(cookieParser());
 app.use(helmet());
 
-app.use(routerAuth);
+app.use('/api', routerAuth);
 app.use(router);
 app.use(routerUser);
 
