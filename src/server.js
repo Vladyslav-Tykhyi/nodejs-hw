@@ -27,9 +27,9 @@ app.use(routerAuth);
 app.use(router);
 app.use(routerUser);
 
+app.use(notFoundHandler);
 app.use(errors());
 app.use(errorHandler);
-app.use(notFoundHandler);
 
 await connectMongoDB();
 
